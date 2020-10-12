@@ -1,6 +1,27 @@
+/**
+ * Copyright (c) 2020 Raoul Harel
+ * All rights reserved
+ */
+
 #include <iostream>
 
 #include "cudu.h"
+
+void cudu::abort_if_false(
+    const bool status,
+    const std::string& file,
+    const unsigned line,
+    const std::string& message)
+{
+    if (!status)
+    {
+        std::cerr
+            << "assertion failed at " << file << " line " << line << ": "
+            << message << std::endl;
+
+        std::abort();
+    }
+}
 
 void cudu::abort_on_error(
     const cudaError_t status, 
@@ -20,23 +41,17 @@ void cudu::abort_on_error(
     }
 }
 
-cudu::Workload cudu::Workload::for_jobs(
-    const unsigned nr_jobs,
-    const unsigned nr_threads_max)
+unsigned cudu::Workload::max_threads_per_block()
 {
-    for (size_t i = 1; i <= sqrt(nr_jobs); ++i)
-    {
-        if (nr_jobs % i == 0 && 
-            nr_jobs / i <= nr_threads_max)
-        {
-            Workload workload;
-            workload.nr_blocks = unsigned(i);
-            workload.nr_threads = unsigned(nr_jobs / i);
-            return workload;
-        }
-    }
+    cudaDeviceProp device_props;
+    cudaGetDeviceProperties(&device_props, 0);
+    return device_props.maxThreadsPerBlock;
+}
+
+cudu::Workload cudu::Workload::for_jobs(const unsigned nr_jobs)
+{
     Workload workload;
-    workload.nr_threads = unsigned(std::min(nr_threads_max, nr_jobs));
+    workload.nr_threads = max_threads_per_block() / 2;
     workload.nr_blocks = unsigned(std::ceil(float(nr_jobs) / workload.nr_threads));
     return workload;
 }

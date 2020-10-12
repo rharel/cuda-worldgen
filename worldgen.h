@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2020 Raoul Harel
+ * All rights reserved
+ */
+
 #pragma once
 
 #include <array>
@@ -9,69 +14,64 @@
 
 namespace worldgen 
 {
-    cudu::Array2D<float> surface_altitude(
+    cudu::device::Array2D<float> altitude(
         uint32_t level_of_detail,
         float noise_initial,
         float noise_scale_factor,
         float bias,
-        uint64_t rng_seed,
-        unsigned max_nr_threads);
+        const cudu::device::Array2D<float>& bias_map,
+        float bias_map_shift,
+        float bias_map_stretch,
+        uint64_t rng_seed);
 
-    cudu::Array3D<float> surface_material(
-        const std::array<size_t, 2>& shape,
+    cudu::device::Array3D<float> material(
+        const cudu::Shape2D& shape,
         const std::vector<SurfaceMaterial>& materials,
         unsigned cell_count,
-        float cell_blur,
-        uint64_t rng_seed,
-        unsigned max_nr_threads);
+        unsigned cell_blur,
+        uint64_t rng_seed);
 
-    cudu::Array2D<float> temperature(
-        const cudu::Array2D<float>& surface_altitude,
+    cudu::device::Array2D<float> temperature(
+        const cudu::device::Array2D<float>& altitude,
         float latitude_factor,
         float altitude_factor,
         float noise,
         float bias,
-        uint64_t rng_seed,
-        unsigned max_nr_threads);
+        uint64_t rng_seed);
 
-    cudu::Array2D<bool> ocean(
-        const cudu::Array2D<float>& surface_altitude,
-        const cudu::Array2D<float>& temperature,
-        float boil_temperature,
-        unsigned max_nr_threads);
+    cudu::device::Array2D<bool> ocean_mask(
+        const cudu::device::Array2D<float>& altitude,
+        const cudu::device::Array2D<float>& temperature,
+        float boil_temperature);
     
-    cudu::Array2D<bool> ice(
-        const cudu::Array2D<float>& temperature,
-        const cudu::Array2D<bool>& ocean_mask,
-        float ocean_freeze_temperature,
-        unsigned max_nr_threads);
+    cudu::device::Array2D<bool> ice_mask(
+        const cudu::device::Array2D<float>& temperature,
+        const cudu::device::Array2D<bool>& ocean_mask,
+        float ocean_freeze_temperature);
 
-    cudu::Array2D<float> precipitation(
-        const cudu::Array2D<float>& temperature,
-        const cudu::Array2D<bool>& ocean_mask,
+    cudu::device::Array2D<float> precipitation(
+        const cudu::device::Array2D<float>& temperature,
+        const cudu::device::Array2D<bool>& ocean_mask,
         const std::vector<ClimateZone>& climate_zones,
-        float climate_zone_weight_min,
         const worldgen::VicinityLookupParams& ocean_lookup_params,
-        float ocean_distance_factor,
-        unsigned max_nr_threads);
+        float ocean_distance_smoothing,
+        float ocean_distance_factor);
 
-    cudu::Array2D<float> rivers(
-        const cudu::Array2D<float>& surface_altitude,
-        const cudu::Array2D<bool>& ocean_mask,
-        const cudu::Array2D<bool>& ice_mask,
-        size_t block_size,
-        const worldgen::VicinityLookupParams& ocean_lookup_params,
-        unsigned max_nr_threads);
+    cudu::device::Array2D<float> rivers(
+        const cudu::device::Array2D<float>& altitude,
+        const cudu::device::Array2D<bool>& ocean_mask,
+        const cudu::device::Array2D<bool>& ice_mask,
+        float block_size,
+        const worldgen::VicinityLookupParams& ocean_lookup_params);
 
-    cudu::Array3D<unsigned char> image(
-        const cudu::Array2D<float>& surface_altitude,
-        const cudu::Array3D<float>& surface_material,
-        const cudu::Array2D<float>& temperature,
-        const cudu::Array2D<bool>& ocean_mask,
-        const cudu::Array2D<bool>& ice_mask,
-        const cudu::Array2D<float>& precipitation,
-        const cudu::Array2D<float>& river_depth,
+    cudu::device::Array3D<unsigned char> image(
+        const cudu::device::Array2D<float>& altitude,
+        const cudu::device::Array3D<float>& material,
+        const cudu::device::Array2D<float>& temperature,
+        const cudu::device::Array2D<bool>& ocean_mask,
+        const cudu::device::Array2D<bool>& ice_mask,
+        const cudu::device::Array2D<float>& precipitation,
+        const cudu::device::Array2D<float>& river_depth,
         const std::vector<worldgen::ClimateZone>& climate_zones,
-        const RenderingOptions& rendering_options,
-        unsigned max_nr_threads);
+        const RenderingOptions& rendering_options);
 }

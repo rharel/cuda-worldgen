@@ -1,14 +1,21 @@
+/**
+ * Copyright (c) 2020 Raoul Harel
+ * All rights reserved
+ */
+
 #pragma once
 
 #include <atomic>
-#include <filesystem>
 #include <chrono>
-#include <thread>
-#include <string>
+#include <filesystem>
 #include <functional>
+#include <string>
+#include <thread>
 
+/// Filewatcher utilities.
 namespace filewatch 
 {
+    /// File watcher events.
     enum class EventKind
     {
         Created,
@@ -16,11 +23,18 @@ namespace filewatch
         Modified
     };
 
+    /// Watches a single file and executes a callback for detected events.
     class FileWatcher 
     {
     public:
         using Callback = std::function<void(const std::string&, EventKind)>;
 
+        /// Creates a new watcher for the given path.
+        ///
+        /// \param path
+        ///     Path to watch.
+        /// \param poll_interval
+        ///     Rate at which to poll for events.
         FileWatcher(
             const std::string& path,
             const std::chrono::milliseconds poll_interval): 
@@ -36,6 +50,12 @@ namespace filewatch
             }
         }
         
+        /// Starts the watcher.
+        /// 
+        /// This blocks until the watcher is stopped. See stop().
+        /// 
+        /// \param callback
+        ///     Function to invoke when events are detected.
         void start(Callback callback) 
         {
             while (!m_stop_requested) 
@@ -58,6 +78,7 @@ namespace filewatch
             }
         }
 
+        /// Stops the watcher.
         void stop() 
         { 
             m_stop_requested = true;  
