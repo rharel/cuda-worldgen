@@ -1,0 +1,104 @@
+{
+    "surface_altitude_level_of_detail": 10,
+    "surface_altitude_noise_initial": 12000,
+    "surface_altitude_noise_scale_factor": 0.6,
+    "surface_altitude_bias": 1000,
+    "surface_altitude_rng_seed": 0,
+
+    "surface_materials": [
+        {
+            "name": "red rock",
+            "likelihood": 1,
+            "visual_altitude_low": {"r": 105, "g": 69, "b": 56},
+            "visual_altitude_high": {"r": 37, "g": 21, "b": 18}
+        },
+        {
+            "name": "brown soil",
+            "likelihood": 1,
+            "visual_altitude_low": {"r": 245, "g": 219, "b": 194},
+            "visual_altitude_high": {"r": 101, "g": 67, "b": 33}
+        }
+    ],
+    "surface_material_cell_count": 4,
+    "surface_material_cell_blur": 3,
+    "surface_material_cell_rng_seed": 0,
+
+    "temperature_latitude_factor": 50,
+    "temperature_altitude_factor": 0.003,
+    "temperature_noise": 3,
+    "temperature_bias": 30,
+    "temperature_rng_seed": 0,
+
+    "ocean_freeze_temperature": -30,
+    "ocean_boil_temperature": 100,
+
+    "precipitation_ocean_distance_factor": 0.003,
+    "precipitation_ocean_lookup": {
+        "radius": 512,
+        "radius_step": 16,
+        "nr_samples": 4,
+        "rng_seed": 0
+    },
+
+    "river_block_size": 64,
+    "river_ocean_lookup": {
+        "radius": 512,
+        "radius_step": 16,
+        "nr_samples": 4,
+        "rng_seed": 0
+    },
+
+    "climate_zones": [
+        {
+            "name": "tropics",
+            "latitude": {"min": 0, "max": 23},
+            "temperature": {"min": 20, "max": 35},
+            "precipitation": {"min": 2000, "max": 3000},
+            "visual_sparse": "80b145",
+            "visual_dense": "316033"
+        },
+        {
+            "name": "subtropics",
+            "latitude": {"min": 23, "max": 30},
+            "temperature": {"min": 20, "max": 35},
+            "precipitation": {"min": 800, "max": 1600},
+            "visual_sparse": {"r": 100, "g": 109, "b": 28},
+            "visual_dense": {"r": 65, "g": 84, "b": 17}
+        },
+        {
+            "name": "temperate zone",
+            "latitude": {"min": 30, "max": 66},
+            "temperature": {"min": 0, "max": 20},
+            "precipitation": {"min": 600, "max": 1000},
+            "visual_sparse": {"r": 141, "g": 153, "b": 103},
+            "visual_dense": {"r": 38, "g": 62, "b": 49}
+        },
+        {
+            "name": "frigid zone",
+            "latitude": {"min": 66, "max": 90},
+            "temperature": {"min": -37, "max": 17},
+            "precipitation": {"min": 600, "max": 1000},
+            "visual_sparse": {"r": 117, "g": 116, "b": 75},
+            "visual_dense": {"r": 45, "g": 51, "b": 40}
+        },
+        {
+            "name": "savanna",
+            "latitude": {"min": 0, "max": 90},
+            "temperature": {"min": 5, "max": 30},
+            "precipitation": {"min": 250, "max": 800},
+            "visual_sparse": {"r": 224, "g": 190, "b": 146},
+            "visual_dense": {"r": 118, "g": 165, "b": 91}
+        }
+    ],
+    "climate_zone_weight_min": 0.01,
+
+    "visual_water_shallow": "c5f5e8",
+    "visual_water_deep": "2a4b5f",
+    "visual_water_depth_limit": 250,
+
+    "visual_ice_thin": {"r": 198, "g": 230, "b": 236},
+    "visual_ice_thick": {"r": 235, "g": 233, "b": 223},
+    "visual_ice_temperature_limit": -30,
+
+    "compute_max_nr_threads": 256
+}
