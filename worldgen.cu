@@ -10,6 +10,7 @@
 #include <random>
 
 #include <curand_kernel.h>
+#include <device_launch_parameters.h>
 
 #include "worldgen.h"
 
@@ -265,6 +266,9 @@ cudu::device::Array2D<float> worldgen::altitude(
     const float noise_initial,
     const float noise_scale_factor,
     const float bias,
+    const cudu::device::Array2D<float>& bias_map,
+    const float bias_map_shift,
+    const float bias_map_stretch,
     const uint64_t rng_seed)
 {
     const size_t edge_size = std::pow(2, max_level_of_detail) + 1;
@@ -686,30 +690,38 @@ cudu::device::Array2D<float> worldgen::precipitation(
 
     const auto zones = cudu::device::Array1D<ClimateZone>::from_ptr(climate_zones.data(), climate_zones.size());
 
-    cudu::device::Array2D<float> result(temperature.shape());
-    
     cudu::device::Array3D<size_t> ocean_vicinity = vicinity_lookup(ocean_mask, ocean_lookup_params);
     cudu::device::Array2D<float> ocean_distance(ocean_mask.shape());
     cudu::device::Array2D<bool> ocean_distance_mask(ocean_distance.shape());
-    cudu::device::Array2D<float> ocean_distance_smooth(ocean_distance.shape());
 
     CUDU_LAUNCH_BATCHES(
         distance_kernel, 
-        result.size(), 
+        temperature.size(),
         BATCH_SIZE, 
         ocean_vicinity, 
         ocean_distance, 
         ocean_distance_mask
     );
+
+    ocean_vicinity.clear();
+
+    cudu::device::Array2D<float> ocean_distance_smooth(ocean_distance.shape());
+    
     CUDU_LAUNCH_BATCHES(
         smoothing_kernel, 
-        result.size(),
+        temperature.size(),
         BATCH_SIZE,
         ocean_distance, 
         ocean_distance_mask, 
         ocean_distance_smoothing, 
         ocean_distance_smooth
     );
+
+    ocean_distance.clear();
+    ocean_distance_mask.clear();
+
+    cudu::device::Array2D<float> result(temperature.shape());
+
     CUDU_LAUNCH_BATCHES(
         precipitation_kernel, 
         result.size(),
@@ -765,14 +777,14 @@ __global__ void max_in_block_kernel(
 
 cudu::device::Array3D<size_t> max_in_block(
     const cudu::device::Array2D<float>& data,
-    const size_t block_size)
+    const float block_size)
 {
     cudu::device::Array3D<size_t> result({
-        size_t(std::ceil(data.shape()[0] / float(block_size))), 
-        size_t(std::ceil(data.shape()[1] / float(block_size))), 
+        size_t(std::ceil(data.shape()[0] / (block_size * data.shape()[0]))), 
+        size_t(std::ceil(data.shape()[1] / (block_size * data.shape()[1]))), 
         2
     });
-    CUDU_LAUNCH_BATCHES(max_in_block_kernel, result.size() / 2, BATCH_SIZE, data, block_size, result);
+    CUDU_LAUNCH_BATCHES(max_in_block_kernel, result.size() / 2, BATCH_SIZE, data, block_size * data.shape()[0], result);
     return result;
 }
 
@@ -879,7 +891,7 @@ cudu::device::Array2D<float> worldgen::rivers(
     const cudu::device::Array2D<float>& altitude,
     const cudu::device::Array2D<bool>& ocean_mask,
     const cudu::device::Array2D<bool>& ice_mask,
-    const size_t block_size,
+    const float block_size,
     const VicinityLookupParams& ocean_lookup_params)
 {
     const cudu::device::Array3D<size_t> sources = max_in_block(altitude, block_size);

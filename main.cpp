@@ -45,11 +45,13 @@ std::vector<worldgen::Component> config_diff_recomputation_effect(
         return std::find(affected.begin(), affected.end(), component) != affected.end();
     };
 
-    if (a.surface_altitude_source_influence != b.surface_altitude_source_influence ||
-        a.surface_altitude_level_of_detail != b.surface_altitude_level_of_detail ||
+    if (a.surface_altitude_level_of_detail != b.surface_altitude_level_of_detail ||
         a.surface_altitude_noise_initial != b.surface_altitude_noise_initial ||
         a.surface_altitude_noise_scale_factor != b.surface_altitude_noise_scale_factor ||
         a.surface_altitude_bias != b.surface_altitude_bias ||
+        a.surface_altitude_bias_map_path != b.surface_altitude_bias_map_path ||
+        a.surface_altitude_bias_map_shift != b.surface_altitude_bias_map_shift ||
+        a.surface_altitude_bias_map_stretch != b.surface_altitude_bias_map_stretch ||
         a.surface_altitude_rng_seed != b.surface_altitude_rng_seed)
     {
         affected.push_back(worldgen::Component::Altitude);
@@ -202,35 +204,33 @@ void generate_world(
     {
         if (component == worldgen::Component::Altitude)
         {
-            /*cudu::device::Array2D<float> bias_map;
-            if (!config.surface_altitude_source_path.empty())
+            cudu::device::Array2D<float> bias_map;
+            if (!config.surface_altitude_bias_map_path.empty())
             {
                 std::cout << "Loading surface altitude image..." << std::endl;
                 const cv::Mat grayscale = cv::imread(
-                    config.surface_altitude_source_path,
+                    config.surface_altitude_bias_map_path,
                     cv::ImreadModes::IMREAD_GRAYSCALE
                 );
-                cudu::host::Array2D<float> bias({
+                cudu::host::Array2D<float> bias(cudu::Shape2D{
                     size_t(grayscale.cols),
                     size_t(grayscale.rows)
                 });
                 for (size_t i = 0; i < bias.size(); ++i)
                 {
-                    bias[i] = config.surface_altitude_source_influence * (2 * (grayscale.data[i] / 255.f) - 1);
+                    bias[i] = (2 * (grayscale.data[i] / 255.f) - 1);
                 }
                 bias_map.upload(bias);
             }
-            else
-            {
-                const size_t edge_size = std::pow(2, config.surface_altitude_level_of_detail) + 1;
-                bias_map.upload(cudu::host::Array2D<float>({ edge_size, edge_size }, 0));
-            }*/
             std::cout << "Computing surface altitude..." << std::endl;
             world.altitude = worldgen::altitude(
                 config.surface_altitude_level_of_detail,
                 config.surface_altitude_noise_initial,
                 config.surface_altitude_noise_scale_factor,
                 config.surface_altitude_bias,
+                bias_map,
+                config.surface_altitude_bias_map_shift,
+                config.surface_altitude_bias_map_stretch,
                 config.surface_altitude_rng_seed
             );
         }
@@ -372,12 +372,12 @@ void generate_world(
         cv::imshow(MAIN_WINDOW_TITLE, image);
         cv::waitKey(30);
 
-        /*HWND main_window = FindWindowA(nullptr, MAIN_WINDOW_TITLE);
+        HWND main_window = FindWindowA(nullptr, MAIN_WINDOW_TITLE);
 
         if (main_window)
         {
             SetWindowPos(main_window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-        }*/
+        }
     }
     
     std::cout << "Ready" << std::endl;

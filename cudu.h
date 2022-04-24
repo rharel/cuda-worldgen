@@ -357,11 +357,8 @@ namespace cudu
 
             DataBlock& operator=(DataBlock&& other) noexcept
             {
-                m_size = other.m_size;
-                m_data = other.m_data;
-
-                other.m_size = 0;
-                other.m_data = nullptr;
+                std::swap(m_size, other.m_size);
+                std::swap(m_data, other.m_data);
 
                 return *this;
             }
@@ -441,8 +438,8 @@ namespace cudu
             }
 
         private:
-            size_t m_size;
-            T* m_data;
+            size_t m_size = 0;
+            T* m_data = nullptr;
         };
     
         template <typename T>
@@ -633,6 +630,11 @@ namespace cudu
                 block().upload_single(value, block_index(i, j, k));
             }
 
+            void clear()
+            {
+                *this = Array<T, rank>(Shape<rank>());
+            }
+
         private:
             size_t block_index(const size_t i, const size_t j) const
             {
@@ -644,8 +646,8 @@ namespace cudu
                 return (i * m_shape[1] + j) * m_shape[2] + k;
             }
 
-            Shape<rank> m_shape;
-            DataBlock<T> m_data;
+            Shape<rank> m_shape = Shape<rank>();
+            DataBlock<T> m_data = DataBlock<T>(0);
         };
 
         template <typename T>

@@ -1,14 +1,14 @@
 {
     "batch_size": 1,
 
-    "surface_altitude_level_of_detail": 12,
+    "surface_altitude_level_of_detail": 10,
     "surface_altitude_noise_initial": 10000,
-    "surface_altitude_noise_scale_factor": 0.625,
-    "surface_altitude_bias": 0,
+    "surface_altitude_noise_scale_factor": 0.65,
+    "surface_altitude_bias": -2000,
     "surface_altitude_bias_map_path": "",
     "surface_altitude_bias_map_shift": 800,
     "surface_altitude_bias_map_stretch": 1.5,
-    "surface_altitude_rng_seed": 25,
+    "surface_altitude_rng_seed": 53,
 
     "surface_materials": [
         {
@@ -18,19 +18,19 @@
             "visual_altitude_high": "251512"
         },
         {
-            "name": "light rock",
+            "name": "grey rock",
             "likelihood": 1,
-            "visual_altitude_low": "f5dbc2",
-            "visual_altitude_high": "654321"
+            "visual_altitude_low": "606060",
+            "visual_altitude_high": "202020"
         }
     ],
     "surface_material_cell_count": 4,
-    "surface_material_cell_blur": 3,
+    "surface_material_cell_blur": 10,
     "surface_material_cell_rng_seed": 0,
 
     "temperature_latitude_factor": 50,
-    "temperature_altitude_factor": 0.005,
-    "temperature_noise": 3,
+    "temperature_altitude_factor": 0.007,
+    "temperature_noise": 2,
     "temperature_bias": 30,
     "temperature_rng_seed": 0,
 
@@ -45,9 +45,9 @@
         "rng_seed": 0
     },
 
-    "river_block_size": 0.125,
+    "river_block_size": 0.06,
     "river_ocean_lookup": {
-        "radius": 0.25,
+        "radius": 250,
         "nr_samples": 8,
         "rng_seed": 0
     },
@@ -55,8 +55,8 @@
     "climate_zones": [
         {
             "name": "tropics",
-            "latitude": {"min": 0, "max": 25},
-            "temperature": {"min": 20, "max": 30},
+            "latitude": {"min": 0, "max": 20},
+            "temperature": {"min": 25, "max": 35},
             "precipitation": {"min": 1500, "max": 3000},
             "visual_sparse": "80b145",
             "visual_dense": "316033"
@@ -72,7 +72,7 @@
         {
             "name": "temperate zone",
             "latitude": {"min": 25, "max": 65},
-            "temperature": {"min": 0, "max": 20},
+            "temperature": {"min": 0, "max": 10},
             "precipitation": {"min": 500, "max": 1000},
             "visual_sparse": "8d9967",
             "visual_dense": "263e31"
@@ -81,7 +81,7 @@
             "name": "desert",
             "latitude": {"min": 0, "max": 90},
             "temperature": {"min": 30, "max": 50},
-            "precipitation": {"min": 0, "max": 250},
+            "precipitation": {"min": 0, "max": 750},
             "visual_sparse": "f6be04",
             "visual_dense": "fde38d"
         }
@@ -97,5 +97,5 @@
 
     "visual_ice_thin": "c6e6ec",
     "visual_ice_thick": "ebe9df",
-    "visual_ice_temperature_limit": -30
+    "visual_ice_temperature_limit": -50
 }
