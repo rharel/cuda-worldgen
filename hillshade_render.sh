@@ -1,0 +1,1 @@
+blender hillshade.blend --background --python hillshade_render.py -- "$@"

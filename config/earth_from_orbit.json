@@ -1,0 +1,117 @@
+{
+    "elevation_comments": "Elevation is computed using simplex noise layers. Each layer, the noise's scale is multiplied by the lacunarity factor and its amplitude by the decay factor. Mount Everest is ~8500m high. The mean elevation over land on Earth is ~850m.",
+    "elevation_rng_seed": 24,
+    "elevation_width": 1024,
+    "elevation_height": 1024,
+    "elevation_nr_layers": 12,
+    "elevation_scale": 1.8,
+    "elevation_lacunarity": 1.7,
+    "elevation_decay": 0.67,
+    "elevation_bias": 850,
+    "elevation_stretch": 14000,
+    "elevation_texture_path": "",
+    "elevation_colormap_path": "config/elevation_colormap.png",
+    "elevation_colormap_min": -8500,
+    "elevation_colormap_max": 8500,
+
+    "ocean_comments": "Ocean distance computation can be limited to a number of iterations.",
+    "ocean_mask_color": "#00ffff",
+    "ocean_distance_limit": 1024,
+    "ocean_distance_colormap_path": "config/rainbow_colormap.png",
+    "ocean_distance_colormap_max": 256,
+
+    "temperature_comments": "Mean temperature on Earth's equator during summer is ~31 degrees celsius. You lose ~6 degrees with each 1000m of elevation. The mean temperature at the north pole during summer is ~0 degrees. Temperature is typically also a few degrees lower near the ocean.",
+    "temperature_rng_seed": 0,
+    "temperature_latitude_difference": -31,
+    "temperature_elevation_factor": -0.006,
+    "temperature_ocean_difference": -4,
+    "temperature_ocean_difference_falloff": 0.1,
+    "temperature_noise": 2,
+    "temperature_bias": 31,
+    "temperature_colormap_path": "config/temperature_colormap.png",
+    "temperature_colormap_min": -30,
+    "temperature_colormap_max": 30,
+
+    "ice_comments": "The ocean's salt water has a lower freezing temperature than water. Additionally, the ocean also has warmer currents moving in cold regions, further lowering its effective freezing temperature.",
+    "ice_temperature_threshold_land": 0,
+    "ice_temperature_threshold_ocean": -10,
+    "ice_mask_color": "#ffffff",
+    
+    "precipitation_comments": "Distance from the ocean determines how much moisture is available in the air. Temperature how much of it the air can carry before it is saturated. The temperature factors are given as a list of four polynomial coefficients (see http://hyperphysics.phy-astr.gsu.edu/hbase/Kinetic/relhum.html).",
+    "precipitation_ocean_distance_factor": -0.002,
+    "precipitation_temperature_coefficients": [5.0, 0.32, 0.0081, 0.00031],
+    "precipitation_multiplier": 20, 
+    "precipitation_colormap_path": "config/water_colormap.png",
+    "precipitation_colormap_max": 500,
+
+    "lake_comments": "Vallies are filled to form lakes. Lake pixels with depth less than the given threshold are discarded.",
+    "lake_iteration_limit": 1024,
+    "lake_depth_threshold": 300,
+    "lake_colormap_path": "config/grayscale_colormap.png",
+    "lake_colormap_depth_max": 1,
+    "lake_colormap_drain_max": 100,
+    "lake_colormap_level_max": 3500,
+
+    "river_comments": "River stream paths are tracked and accumulated for each pixel, while taking precipitation into account when determining the water volume contributed from each source. Stream pixels with intensity less than the given threshold are discarded. Finally, stream depth at a given pixel is determined by multiplying a factor with its intensity.",
+    "river_iteration_limit": 1024,
+    "river_precipitation_factor": 0.005,
+    "river_erosion_iterations": 1,
+    "river_erosion_factor": 0.5,
+    "river_intensity_threshold": 40,
+    "river_depth_factor": 1,
+    "river_colormap_path": "config/grayscale_colormap.png",
+    "river_colormap_intensity_max": 100,
+    "river_colormap_depth_max": 1,
+    "river_distance_limit": 1000,
+    "river_distance_colormap_path": "config/rainbow_colormap.png",
+    "river_distance_colormap_max": 10,
+
+    "biomes_comments": "Biomes are defined as a collection of qualifiers. We used this chart as a rough guide: https://upload.wikimedia.org/wikipedia/commons/6/68/Climate_influence_on_terrestrial_biome.svg",
+    "biomes": [
+        {
+            "name": "Tropical Forest",
+            "temperature": {"min": 21, "max": 30},
+            "precipitation": {"min": 400, "max": 600},
+            "sparse_color": "#294c34",
+            "dense_color": "#132C19"
+        },
+        {
+            "name": "Subtropical Forest",
+            "temperature": {"min": 10, "max": 25},
+            "precipitation": {"min": 300, "max": 500},
+            "sparse_color": "#74882d",
+            "dense_color": "#305006"
+        },
+        {
+            "name": "Temperate Forest",
+            "temperature": {"min": -1, "max": 10},
+            "precipitation": {"min": 100, "max": 300},
+            "sparse_color": "#767b30",
+            "dense_color": "#223602"
+        },
+        {
+            "name": "Desert",
+            "temperature": {"min": 25, "max": 60},
+            "precipitation": {"min": 0, "max": 200},
+            "sparse_color": "#8a7a69",
+            "dense_color": "#d1b590"
+        },
+        {
+            "name": "Tundra",
+            "temperature": {"min": -30, "max": -7},
+            "precipitation": {"min": 0, "max": 300},
+            "sparse_color": "#717b7d",
+            "dense_color": "#b2bcbe"
+        }
+    ],
+    
+    "image_deep_water_threshold": 100,
+    "image_deep_water_color": "#17244D",
+    "image_shallow_water_color": "#3c8e88",
+    "image_color_interpolation_kind": "linear",
+
+    "heightmap_colormap_path": "config/grayscale_colormap.png",
+    "heightmap_colormap_max": 8500,
+    
+    "output_directory_path": "./output"
+}

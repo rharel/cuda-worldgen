@@ -1,0 +1,7 @@
+﻿/.vs
+/archive
+/output
+/x64
+
+*.blend*
+*.log

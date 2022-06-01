@@ -11,22 +11,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="config.h" />
-    <ClInclude Include="cudu.h" />
-    <ClInclude Include="external\include\json.hpp" />
-    <ClInclude Include="filewatch.h" />
-    <ClInclude Include="model.h" />
-    <ClInclude Include="worldgen.h" />
+    <ClInclude Include="external\cuda_noise.h" />
+    <ClInclude Include="source\config.h" />
+    <ClInclude Include="source\cudu.h" />
+    <ClInclude Include="external\json.hpp" />
+    <ClInclude Include="source\filewatch.h" />
+    <ClInclude Include="source\model.h" />
+    <ClInclude Include="source\worldgen.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="cudu.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="source\cudu.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\model.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="worldgen.cu" />
+    <CudaCompile Include="source\worldgen.cu" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config\config.json" />
+    <None Include=".gitignore" />
+    <None Include=".clang-format" />
+    <None Include="config\earth_from_orbit.json" />
+    <None Include="cuda_worldgen_project_suppressions.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="config\elevation_colormap.png" />
+    <Image Include="config\grayscale_colormap.png" />
+    <Image Include="config\water_colormap.png" />
+    <Image Include="config\rainbow_colormap.png" />
+    <Image Include="config\temperature_colormap.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{5120E378-E83C-47B0-B374-5A83BA8EF7A7}</ProjectGuid>
@@ -66,14 +78,14 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Raoul\Documents\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>opencv_world440d.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raoul\Documents\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
@@ -89,7 +101,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;WIN64;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>C:\Users\Raoul\Documents\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(OPENCV_DIR)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
@@ -98,7 +110,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>opencv_world440.lib;cudart_static.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\Users\Raoul\Documents\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(OPENCV_DIR)\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
